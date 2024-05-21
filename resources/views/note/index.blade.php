@@ -13,7 +13,12 @@
                <div class="card-item">
                   <a class="btn btn-primary" href="{{route('notes.show', $note)}}"> View </a>
                   <a class="btn btn-success" href="{{route('notes.edit', $note)}}"> Edit </a>
-                  <a class="btn btn-danger"> Delete </a>
+                  <form action="{{route('notes.destroy', $note)}}" method="post">
+                     @csrf
+                     @method('DELETE')
+                     <button class="btn btn-danger"> Delete </button>
+                  </form>
+
                </div>
             </div>
          </div>

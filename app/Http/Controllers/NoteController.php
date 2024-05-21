@@ -50,6 +50,29 @@ class NoteController extends Controller
     public function store(Request $request)
     {
         //
+
+        $data = $request->validate([
+            'title' => 'required|string|max:100',
+            'note' => 'required|string',
+            'user_id' => 'required|exists:users,id',
+            'images' => 'required|array',
+            'images.*' => 'image|mimes:jpg,png,jpeg,gif,svg|max:1024'
+        ]);
+
+        $images = [];
+        foreach($request->file('images') as $image){
+            $imageName = $image->getClientOriginalName();
+            $image->storeAs('public/uploads', $imageName);
+            $images[] = $imageName;
+        }
+
+        $data['images'] = json_encode($images) ?? '[]';
+
+        $note = Note::create($data);
+
+        return to_route('notes.show', $note);
+        
+
     }
 
 
@@ -85,5 +108,8 @@ class NoteController extends Controller
     public function destroy(Note $note)
     {
         //
+        $note->delete();
+        return redirect()->route('notes.index');
+        
     }
 }

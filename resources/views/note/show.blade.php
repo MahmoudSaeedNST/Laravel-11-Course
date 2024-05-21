@@ -3,16 +3,19 @@
       <div class="col-8 offset-2">
          <div class="card">
             <div class="card-body">
-               <div  id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
+               <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
                   <div class="carousel-inner">
                      @php
-                        $images = json_decode($note->images, true);
+                     $images = json_decode($note->images, true);
                      @endphp
-                     @foreach ($images as $key => $image)
-                     <div class="carousel-item {{$key == 0 ? 'active' : ''}}">
-                        <img src="{{asset('storage/uploads') . '/' . $image}}" class="d-block w-100" alt="...">
-                     </div>
-                     @endforeach
+                     @if ($images != null)
+                        @foreach ($images as $key => $image)
+                        <div class="carousel-item {{$key == 0 ? 'active' : ''}}">
+                           <img src="{{asset('storage/uploads') . '/' . $image}}" class="d-block w-100" alt="...">
+                        </div>
+                        @endforeach
+                     @endif
+
                   </div>
                   <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -29,7 +32,11 @@
                   <div class="card-item">
                      <a class="btn btn-primary" href="{{route('notes.index')}}"> Back </a>
                      <a class="btn btn-success" href="{{route('notes.edit', $note)}}"> Edit </a>
-                     <a class="btn btn-danger"> Delete </a>
+                     <form action="{{route('notes.destroy', $note)}}" method="post">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-danger"> Delete </button>
+                     </form>
                   </div>
                </div>
             </div>
